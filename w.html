@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Fallback meta refresh after 2.5s (in case JS is disabled) -->
+  <meta http-equiv="refresh" content="2.5;url=https://x.com/zunvein/status/1981961527902261336">
+  <title>Redirecting…</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+           display:flex; align-items:center; justify-content:center; height:100vh;
+           margin:0; background:#fff; color:#111; }
+    .box { text-align:center; max-width:420px; padding:20px; }
+    a { color: #1d9bf0; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Opening post…</h1>
+    <p>If nothing happens, <a href="https://x.com/zunvein/status/1981961527902261336">click here to open in browser</a>.</p>
+  </div>
+
+  <script>
+    (function () {
+      const webUrl = "https://x.com/zunvein/status/1981961527902261336";
+      const statusId = "1981961527902261336";
+
+      // Try iOS/old Twitter URL scheme
+      const iosLink = `twitter://status?id=${statusId}`;
+
+      // Try universal twitter intent for Android (commonly works in Chrome on Android)
+      // This uses Android "intent:" which can open the app if installed.
+      const androidIntent = `intent://status/${statusId}#Intent;package=com.twitter.android;scheme=twitter;end`;
+
+      // Additional attempt using twitter URI that some clients accept
+      const twitterUri = `twitter://status?id=${statusId}`;
+
+      // Sequence of attempts with short delays and a final fallback to web URL.
+      const attempts = [
+        () => { window.location.href = iosLink; },        // iOS / URL scheme
+        () => { window.location.href = twitterUri; },     // twitter URI
+        () => { window.location.href = androidIntent; },  // android intent
+      ];
+
+      // Try each attempt with small delay; if none succeed, finally go to webUrl
+      let i = 0;
+      const tryNext = () => {
+        if (i < attempts.length) {
+          try {
+            attempts[i]();
+          } catch (e) { /* ignore */ }
+          i++;
+          // If app opened, browser page is usually paused/unloaded — we still set a timer to fallback.
+          setTimeout(tryNext, 500);
+        } else {
+          // final fallback
+          window.location.replace(webUrl);
+        }
+      };
+
+      // Start attempts after a very short delay so page can render
+      setTimeout(tryNext, 50);
+    })();
+  </script>
+</body>
+</html>
